@@ -1,9 +1,10 @@
 const express = require('express');
+const groupRoutes = require('./src/routes/groupRoutes');
 
 const app = express();
 
-app.get('/', (req, res) => {
-    res.send('<h1>Hello Codeit</h1>');
-});
+app.use(express.json());
 
-app.listen(3000);
+app.use('/api', groupRoutes);
+
+app.listen(3001);
