@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model GroupBadge {
+  id      Int @id @default(autoincrement())
+  groupId Int
+  badgeId Int
+}
+
+model Group {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(30)
+  password   String   @db.VarChar(30)
+  isPublic   Boolean  @default(false)
+  likeCount  Int
+  badgeCount Int
+  postCount  Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Post       Post[]
+}
+
+model Post {
+  id           Int       @id @default(autoincrement())
+  group        Group     @relation(fields: [groupId], references: [id])
+  groupId      Int
+  nickname     String    @db.VarChar(30)
+  password     String    @db.VarChar(30)
+  title        String    @db.VarChar(30)
+  content      String    @db.VarChar(300)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  location     String    @db.VarChar(100)
+  moment       DateTime
+  likeCount    Int
+  commentCount Int
+  isPublic     Boolean   @default(false)
+  tags         String
+  //image
+  Comment      Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  nickname  String   @db.VarChar(30)
+  password  String   @db.VarChar(30)
+  content   String   @db.VarChar(300)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model badge {
+  id   Int    @id @default(autoincrement())
+  name String @db.VarChar(30)
+  //image
+}
