@@ -46,8 +46,37 @@ class groupController {
             const groups = await prisma.group.findMany();
             res.status(200).json(groups);
         } catch (error) {
-            console.log(error);
+            console.error(error);
             res.status(500).send('An error occurred while creating group.');
+        }
+    }
+
+    async changeGroupInfo(req, res, next) {
+        try {
+            const { groupId } = req.params;
+            const { id, name, password, isPublic, likeCount, badgeCount, postCount, createdAt, introduction } = req.body;
+
+            const group = await prisma.group.update({
+                where: {
+                    id: Number(groupId)
+                },
+                data: {
+                    id,
+                    name,
+                    password,
+                    isPublic,
+                    likeCount,
+                    postCount,
+                    badgeCount,
+                    createdAt,
+                    introduction
+                }
+            })
+
+            res.status(200).json(group);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while updating group.');
         }
     }
 }

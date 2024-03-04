@@ -14,4 +14,8 @@ groupRoutes
     .route('/groups')
     .post(groupController.createGroup);
 
-export default groupRoutes;
+groupRoutes
+    .route('/groups/:groupId')
+    .put(groupController.changeGroupInfo)
+
+    export default groupRoutes;
