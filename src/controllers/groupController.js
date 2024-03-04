@@ -1,39 +1,17 @@
-exports.getAllGroup = async(req, res, next) => {
-    try {
-        res.status(200).json(
-            [
-                {
-                    "currentPage": 1,
-                    "totalPages": 5,
-                    "totalItemCount": 50,
-                    "data": [
-                        {
-                            "id": 1,
-                            "name": "string",
-                            "imageUrl": "string",
-                            "isPublic": true,
-                            "likeCount": 0,
-                            "badgeCount": 0,
-                            "postCount": 0,
-                            "createdAt": "2024-02-22T07:47:49.803Z",
-                            "introduction": "string"
-                        },
-                        {
-                            "id": 2,
-                            "name": "string",
-                            "imageUrl": "string",
-                            "isPublic": true,
-                            "likeCount": 0,
-                            "badgeCount": 0,
-                            "postCount": 0,
-                            "createdAt": "2024-02-22T07:47:49.803Z",
-                            "introduction": "string"
-                        }
-                    ],
-                }
-            ]
-        )
-    } catch(error) {
-        next(error);
-    }
-};
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient()
+
+class groupController {
+    async getAllGroups(req, res, next) {
+        try {
+            const groups = await prisma.group.findMany();
+            res.status(200).json(groups);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while retrieving all groups.');
+        }
+    };
+}
+
+export default new groupController();
