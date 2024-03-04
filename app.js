@@ -1,5 +1,5 @@
-const express = require('express');
-const groupRoutes = require('./src/routes/groupRoutes');
+import express from 'express';
+import groupRoutes from './src/routes/groupRoutes.js';
 
 const app = express();
 
