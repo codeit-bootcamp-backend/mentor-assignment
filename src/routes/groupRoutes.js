@@ -22,4 +22,8 @@ groupRoutes
     .route('/groups/:groupId')
     .delete(groupController.deleteGroupInfo);
 
+groupRoutes
+    .route('/groups/:groupId/like')
+    .post(groupController.increaseGroupLikes);
+
 export default groupRoutes;

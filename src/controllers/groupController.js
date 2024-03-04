@@ -115,6 +115,30 @@ class groupController {
             res.status(500).send('An error occurred while deleting group.');
         }
     }
+
+    async increaseGroupLikes(req, res, next) {
+        try {
+            const { groupId } = req.params;
+            
+            const group = await prisma.group.update({
+                where: {
+                    id: Number(groupId)
+                },
+                data: {
+                    likeCount: { increment: 1}
+                }
+            });
+            
+            res.status(200).json(
+                {
+                    "message": "그룹 공감하기 성공"
+                }
+            )
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occured while increasing group likes.');
+        }
+    }
 }
 
 export default new groupController();
