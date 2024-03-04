@@ -65,10 +65,6 @@ class groupController {
                     name,
                     password,
                     isPublic,
-                    likeCount,
-                    postCount,
-                    badgeCount,
-                    createdAt,
                     introduction
                 }
             })
@@ -125,7 +121,7 @@ class groupController {
                     id: Number(groupId)
                 },
                 data: {
-                    likeCount: { increment: 1}
+                    likes: { increment: 1}
                 }
             });
             

@@ -24,9 +24,9 @@ model Group {
   name         String    @db.VarChar(30)
   password     String    @db.VarChar(30)
   isPublic     Boolean   @default(false)
-  likeCount    Int?      @default(0)
-  badgeCount   Int?      @default(0)
-  postCount    Int?      @default(0)
+  likes        Int?      @default(0)
+  badges       Int?      @default(0)
+  posts        Int?      @default(0)
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   introduction String    @db.VarChar(300)
@@ -34,23 +34,23 @@ model Group {
 }
 
 model Post {
-  id           Int       @id @default(autoincrement())
-  group        Group     @relation(fields: [groupId], references: [id])
-  groupId      Int
-  nickname     String    @db.VarChar(30)
-  password     String    @db.VarChar(30)
-  title        String    @db.VarChar(30)
-  content      String    @db.VarChar(300)
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-  location     String    @db.VarChar(100)
-  moment       DateTime
-  likeCount    Int
-  commentCount Int
-  isPublic     Boolean   @default(false)
-  tags         String
+  id        Int       @id @default(autoincrement())
+  group     Group     @relation(fields: [groupId], references: [id])
+  groupId   Int
+  nickname  String    @db.VarChar(30)
+  password  String    @db.VarChar(30)
+  title     String    @db.VarChar(30)
+  content   String    @db.VarChar(300)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  location  String    @db.VarChar(100)
+  moment    DateTime
+  likes     Int
+  comments  Int
+  isPublic  Boolean   @default(false)
+  tags      String
   //image
-  Comment      Comment[]
+  Comment   Comment[]
 }
 
 model Comment {
