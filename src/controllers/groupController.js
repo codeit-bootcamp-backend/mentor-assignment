@@ -54,14 +54,14 @@ class groupController {
     async changeGroupInfo(req, res, next) {
         try {
             const { groupId } = req.params;
-            const { id, name, password, isPublic, likeCount, badgeCount, postCount, createdAt, introduction } = req.body;
+            const { name, password, isPublic, introduction } = req.body;
 
             const group = await prisma.group.update({
                 where: {
                     id: Number(groupId)
                 },
                 data: {
-                    id,
+                    id: Number(groupId),
                     name,
                     password,
                     isPublic,
