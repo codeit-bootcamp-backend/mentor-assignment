@@ -18,4 +18,4 @@ groupRoutes
     .route('/groups/:groupId')
     .put(groupController.changeGroupInfo)
 
-    export default groupRoutes;
+export default groupRoutes;
