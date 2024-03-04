@@ -18,4 +18,8 @@ groupRoutes
     .route('/groups/:groupId')
     .put(groupController.changeGroupInfo)
 
+groupRoutes
+    .route('/groups/:groupId')
+    .delete(groupController.deleteGroupInfo);
+
 export default groupRoutes;

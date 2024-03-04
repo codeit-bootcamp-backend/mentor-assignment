@@ -79,6 +79,42 @@ class groupController {
             res.status(500).send('An error occurred while updating group.');
         }
     }
+
+    async deleteGroupInfo(req, res, next) {
+        try {
+            const { groupId } = req.params;
+            const { password } = req.body;
+
+            const group = await prisma.group.findUnique({
+                where: {
+                    id: Number(groupId)
+                }
+            });
+
+            if (group.password == password) {
+                const deleteGroup = await prisma.group.delete({
+                    where: {
+                        id: Number(groupId)
+                    }
+                });
+
+                res.status(200).json(
+                    {
+                        "message": "그룹 삭제 성공"
+                    }
+                )
+            } else {
+                res.status(403).json(
+                    {
+                        "message": "비밀번호가 틀렸습니다"
+                    }
+                )
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while deleting group.');
+        }
+    }
 }
 
 export default new groupController();
