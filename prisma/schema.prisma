@@ -20,16 +20,17 @@ model GroupBadge {
 }
 
 model Group {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(30)
-  password   String   @db.VarChar(30)
-  isPublic   Boolean  @default(false)
-  likeCount  Int
-  badgeCount Int
-  postCount  Int
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  Post       Post[]
+  id           Int       @id @default(autoincrement())
+  name         String    @db.VarChar(30)
+  password     String    @db.VarChar(30)
+  isPublic     Boolean   @default(false)
+  likeCount    Int?      @default(0)
+  badgeCount   Int?      @default(0)
+  postCount    Int?      @default(0)
+  createdAt    DateTime? @default(now())
+  updatedAt    DateTime? @updatedAt
+  introduction String    @db.VarChar(300)
+  Post         Post[]
 }
 
 model Post {
