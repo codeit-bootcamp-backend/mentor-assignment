@@ -12,6 +12,23 @@ class groupController {
             res.status(500).send('An error occurred while retrieving all groups.');
         }
     };
+
+    async getGroupInfo(req, res, next) {
+        try {
+            const { groupId } = req.params;
+            
+            const group = await prisma.group.findUnique({
+                where: {
+                    id: Number(groupId)
+                }
+            });
+            
+            res.status(200).json(group);
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('An error occurred while retrieving group info.');
+        }
+    };
 }
 
 export default new groupController();

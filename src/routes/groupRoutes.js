@@ -6,4 +6,8 @@ groupRoutes
     .route('/groups')
     .get(groupController.getAllGroups);
 
+groupRoutes
+    .route('/groups/:groupId')
+    .get(groupController.getGroupInfo);
+
 export default groupRoutes;
