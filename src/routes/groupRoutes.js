@@ -10,4 +10,8 @@ groupRoutes
     .route('/groups/:groupId')
     .get(groupController.getGroupInfo);
 
+groupRoutes
+    .route('/groups')
+    .post(groupController.createGroup);
+
 export default groupRoutes;
