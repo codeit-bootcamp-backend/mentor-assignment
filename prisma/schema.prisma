@@ -23,7 +23,7 @@ model Group {
   id           Int       @id @default(autoincrement())
   name         String    @db.VarChar(30)
   password     String    @db.VarChar(30)
-  isPublic     Boolean   @default(false)
+  isPublic     Boolean   @default(true)
   likes        Int?      @default(0)
   badges       Int?      @default(0)
   posts        Int?      @default(0)
@@ -44,10 +44,10 @@ model Post {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   location  String    @db.VarChar(100)
-  moment    DateTime
-  likes     Int
-  comments  Int
-  isPublic  Boolean   @default(false)
+  moment    DateTime? @default(now())
+  likes     Int?      @default(0)
+  comments  Int?      @default(0)
+  isPublic  Boolean   @default(true)
   tags      String
   //image
   Comment   Comment[]
