@@ -1,33 +1,37 @@
 import express from 'express';
-import groupController from '../controllers/groupController.js';
+import GroupController from '../controllers/groupController.js';
 const groupRoutes = express.Router();
 
 groupRoutes
     .route('/groups')
-    .get(groupController.getAllGroups);
+    .get(GroupController.getAllGroups);
 
 groupRoutes
     .route('/groups/:groupId')
-    .get(groupController.getGroupInfo);
+    .get(GroupController.getGroupInfo);
 
 groupRoutes
     .route('/groups')
-    .post(groupController.createGroup);
+    .post(GroupController.createGroup);
 
 groupRoutes
     .route('/groups/:groupId')
-    .put(groupController.changeGroupInfo)
+    .put(GroupController.updateGroupInfo)
 
 groupRoutes
     .route('/groups/:groupId')
-    .delete(groupController.deleteGroupInfo);
+    .delete(GroupController.deleteGroupInfo);
 
 groupRoutes
     .route('/groups/:groupId/like')
-    .post(groupController.increaseGroupLikes);
+    .post(GroupController.increaseGroupLikes);
 
 groupRoutes
     .route('/groups/:groupId/verify-password')
-    .post(groupController.verifyGroupPassword);
+    .post(GroupController.verifyGroupPassword);
+
+groupRoutes
+    .route('/groups/test/delete')
+    .get(GroupController.deleteAllGroups);
 
 export default groupRoutes;
