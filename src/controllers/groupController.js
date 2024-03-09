@@ -135,6 +135,36 @@ class groupController {
             res.status(500).send('An error occured while increasing group likes.');
         }
     }
+
+    async verifyGroupPassword(req, res, next) {
+        try {
+            const { groupId } = req.params;
+            const { password } = req.body;
+
+            const group = await prisma.group.findUnique({
+                where: {
+                    id: Number(groupId)
+                }
+            });
+
+            if (group.password == password) {
+                res.status(200).json(
+                    {
+                        "message": "비밀번호가 확인되었습니다"
+                    }
+                );
+            } else {
+                res.status(401).json(
+                    {
+                        "message": "비밀번호가 틀렸습니다"
+                    }
+                );
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('An error occured while verifying group password.');
+        }
+    }
 }
 
 export default new groupController();

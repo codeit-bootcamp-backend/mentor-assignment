@@ -26,4 +26,8 @@ groupRoutes
     .route('/groups/:groupId/like')
     .post(groupController.increaseGroupLikes);
 
+groupRoutes
+    .route('/groups/:groupId/verify-password')
+    .post(groupController.verifyGroupPassword);
+
 export default groupRoutes;
