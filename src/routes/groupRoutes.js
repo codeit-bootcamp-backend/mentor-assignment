@@ -31,6 +31,10 @@ groupRoutes
     .post(GroupController.verifyGroupPassword);
 
 groupRoutes
+    .route('/groups/:groupId/is-public')
+    .get(GroupController.isGroupPublic);
+
+groupRoutes
     .route('/groups/test/delete')
     .get(GroupController.deleteAllGroups);
 

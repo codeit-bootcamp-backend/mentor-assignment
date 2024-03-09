@@ -5,6 +5,31 @@ const prisma = new PrismaClient()
 
 class GroupController {
 
+    constructor() {
+        this._getOneGroup = this._getOneGroup.bind(this);
+        this.getGroupInfo = this.getGroupInfo.bind(this);
+        this.deleteGroupInfo = this.deleteGroupInfo.bind(this);
+        this.verifyGroupPassword = this.verifyGroupPassword.bind(this);
+        this.isGroupPublic = this.isGroupPublic.bind(this);
+    }
+
+    async _getOneGroup(id) {
+        try {
+            id = Number(id);
+            const data = { id };
+
+            const group = await BaseController._getOne(prisma.group, data);
+
+            return group;
+
+        } catch (error) {
+            console.log(error);
+            // res.status(500).send('An error occurred while retrieving group info.222');
+            return error;
+
+        }
+    }
+
     async getAllGroups(req, res, next) {
         try {
             const groups = await BaseController._getSeveral(prisma.group);
@@ -20,10 +45,7 @@ class GroupController {
 
     async getGroupInfo(req, res, next) {
         try {
-            const id = Number(req.params.groupId);
-            const data = { id };
-
-            const group = await BaseController._getOne(prisma.group, data);
+            const group = await this._getOneGroup(Number(req.params.groupId));
             
             res.status(200).json(group);
 
@@ -65,13 +87,10 @@ class GroupController {
 
     async deleteGroupInfo(req, res, next) {
         try {
-            const id = Number(req.params.groupId);
-            const data = { id };
-
-            const group = await BaseController._getOne(prisma.group, data);
+            const group = await this._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.password) {
-                const deleteGroup = await BaseController._deleteOne(prisma.group, data);
+                const deleteGroup = await BaseController._deleteOne(prisma.group, group);
 
                 res.status(200).json(
                     {
@@ -124,10 +143,7 @@ class GroupController {
 
     async verifyGroupPassword(req, res, next) {
         try {
-            const id = Number(req.params.groupId);
-            const data = { id };
-
-            const group = await BaseController._getOne(prisma.group, data);
+            const group = await this._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.password) {
                 res.status(200).json(
@@ -160,6 +176,27 @@ class GroupController {
         } catch (error) {
             console.log(error);
             res.status(500).send('An error occured while delete all group informations.');
+
+        }
+    }
+
+    async isGroupPublic(req, res, next) {
+        try {
+            const group = await this._getOneGroup(Number(req.params.groupId));
+
+            if (group.isPublic) {
+                res.status(200).send(JSON.parse(`
+                {
+                    "id": ${group.id},
+                    "isPublic": ${group.isPublic}
+                }
+            `));
+
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('An error occured while checking group public.')
 
         }
     }
