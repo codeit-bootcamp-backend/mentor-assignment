@@ -1,29 +1,37 @@
 import express from 'express';
-import postController from '../controllers/postController.js';
+import PostController from '../controllers/postController.js';
 const postRoutes = express.Router();
 
 postRoutes
     .route('/groups/:groupId/posts')
-    .get(postController.getAllPostsInGroup);
+    .get(PostController.getAllPosts);
 
 postRoutes
     .route('/groups/:groupId/posts')
-    .get(postController.createPostInGroup);    
+    .post(PostController.createPost);    
 
 postRoutes
     .route('/posts/:postId')
-    .get(postController.getPostInfo);
+    .get(PostController.getPostInfo);
 
 postRoutes
     .route('/posts/:postId')
-    .put(postController.changePostInfo)
+    .put(PostController.updatePostInfo)
 
 postRoutes
     .route('/posts/:postId')
-    .delete(postController.deletePostInfo);
+    .delete(PostController.deletePostInfo);
 
 postRoutes
     .route('/posts/:postId/like')
-    .post(postController.increasePostLikes);
+    .post(PostController.increasePostLikes);
+
+postRoutes
+    .route('/posts/:postId/verify-password')
+    .post(PostController.verifyPostPassword);
+
+postRoutes
+    .route('/posts/:postId/verify-password')
+    .post(PostController.isPostPublic);
 
 export default postRoutes;

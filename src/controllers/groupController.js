@@ -24,7 +24,6 @@ class GroupController {
 
         } catch (error) {
             console.log(error);
-            // res.status(500).send('An error occurred while retrieving group info.222');
             return error;
 
         }

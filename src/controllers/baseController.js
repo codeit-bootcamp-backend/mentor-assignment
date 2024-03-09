@@ -1,13 +1,10 @@
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
-
 class BaseController {
     async _getSeveral(target) {
         try {
             const obj =  await target.findMany();
 
             return obj;
+            
         } catch (error) {
             return false;
             
