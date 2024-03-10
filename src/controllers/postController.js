@@ -12,6 +12,7 @@ class PostController {
         this.deletePostInfo = this.deletePostInfo.bind(this);
         this.verifyPostPassword = this.verifyPostPassword.bind(this);
         this.isPostPublic = this.isPostPublic.bind(this);
+        this.updatePostInfo = this.updatePostInfo.bind(this);
     }
 
     async _getOnePost(id) {
@@ -58,7 +59,7 @@ class PostController {
 
     async createPost(req, res, next) {
         try {
-            const group = await GroupController._getOneGroup(req.params.groupId);
+            const group = await GroupController._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.groupPassword) {
                 if (req.file != undefined) {
@@ -75,17 +76,16 @@ class PostController {
                 delete req.body.groupPassword;
                 delete req.body.postPassword;
 
-                console.log(req.body);
-
                 const post = await BaseController._createOne(prisma.post, req.body);
             
                 res.status(200).send(post);
 
             } else {
-                res.status(400).send('invalid group password');
+                res.status(403).json({
+                    "message": "그룹 비밀번호가 틀렸습니다"
+                });
 
             }
-            console.log(req.body);
 
         } catch (error) {
             console.error(error);
@@ -96,18 +96,38 @@ class PostController {
 
     async updatePostInfo(req, res, next) {
         try {
-            if (req.file != undefined) {
-                req.body.image = req.file.path;
+            const post = await this._getOnePost(Number(req.params.postId));
+            const groupId = post.groupId;
+
+            if (post.password == req.body.postPassword) {
+                if (req.file != undefined) {
+                    req.body.image = req.file.path;
+    
+                }
+                
+                console.log(req.body)
+
+                req.body.isPublic = Boolean(req.body.isPublic);
+                req.body.groupId = Number(groupId);
+                req.body.tags = JSON.parse(req.body.tags);
+                req.body.moment = new Date(req.body.moment);
+                req.body.password = req.body.postPassword;
+
+                delete req.body.postPassword;
+
+                const id = Number(req.params.postId);
+                const query = { id };
+                console.log(query);
+                const post = await BaseController._updateOne(prisma.post, query, req.body);
+
+                res.status(200).json(post);
+
+            } else {
+                res.status(403).json({
+                    "message": "포스트 비밀번호가 틀렸습니다"
+                });
 
             }
-            req.body.isPublic = Boolean(req.body.isPublic);
-
-            const id = Number(req.params.postId);
-            const query = { id };
-
-            const post = await BaseController._updateOne(prisma.post, query, req.body);
-
-            res.status(200).json(post);
 
         } catch (error) {
             console.error(error);

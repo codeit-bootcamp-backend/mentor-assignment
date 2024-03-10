@@ -11,6 +11,7 @@ class GroupController {
         this.deleteGroupInfo = this.deleteGroupInfo.bind(this);
         this.verifyGroupPassword = this.verifyGroupPassword.bind(this);
         this.isGroupPublic = this.isGroupPublic.bind(this);
+        this.updateGroupInfo = this.updateGroupInfo.bind(this);
     }
 
     async _getOneGroup(id) {
@@ -98,7 +99,7 @@ class GroupController {
                         "message": "비밀번호가 틀렸습니다"
                     }
                 )
-                
+
             }
 
         } catch (error) {
