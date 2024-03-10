@@ -140,12 +140,13 @@ class PostController {
         try {
             const post = await this._getOnePost(Number(req.params.postId));
 
-            if (post.password == req.body.password) {
-                const deletePost = await BaseController._deleteOne(prisma.post, Post);
+            if (post.password == req.body.postPassword) {
+                delete post.tags;
+                const deletePost = await BaseController._deleteOne(prisma.post, post);
 
                 res.status(200).json(
                     {
-                        "message": "그룹 삭제 성공"
+                        "message": "게시글 삭제 성공"
                     }
                 )
 
