@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import BaseController from './baseController.js';
+import GroupController from './groupController.js';
 
 const prisma = new PrismaClient()
 
@@ -18,9 +19,9 @@ class PostController {
             id = Number(id);
             const data = { id };
 
-            const Post = await BaseController._getOne(prisma.post, data);
+            const post = await BaseController._getOne(prisma.post, data);
 
-            return Post;
+            return post;
 
         } catch (error) {
             console.log(error);
@@ -31,9 +32,9 @@ class PostController {
 
     async getAllPosts(req, res, next) {
         try {
-            const Posts = await BaseController._getSeveral(prisma.post);
+            const posts = await BaseController._getSeveral(prisma.post);
 
-            res.status(200).json(Posts);
+            res.status(200).json(posts);
 
         } catch (error) {
             console.error(error);
@@ -44,9 +45,9 @@ class PostController {
 
     async getPostInfo(req, res, next) {
         try {
-            const Post = await this._getOnePost(Number(req.params.postId));
+            const post = await this._getOnePost(Number(req.params.postId));
             
-            res.status(200).json(Post);
+            res.status(200).json(post);
 
         } catch (error) {
             console.error(error);
@@ -57,9 +58,34 @@ class PostController {
 
     async createPost(req, res, next) {
         try {
-            const Post = await BaseController._createOne(prisma.post, req.body);
+            const group = await GroupController._getOneGroup(req.params.groupId);
+
+            if (group.password == req.body.groupPassword) {
+                if (req.file != undefined) {
+                    req.body.image = req.file.path;
+    
+                }
+
+                req.body.isPublic = Boolean(req.body.isPublic);
+                req.body.groupId = Number(req.params.groupId);
+                req.body.tags = JSON.parse(req.body.tags);
+                req.body.moment = new Date(req.body.moment);
+                req.body.password = req.body.postPassword;
+
+                delete req.body.groupPassword;
+                delete req.body.postPassword;
+
+                console.log(req.body);
+
+                const post = await BaseController._createOne(prisma.post, req.body);
             
-            res.status(200).send(Post);
+                res.status(200).send(post);
+
+            } else {
+                res.status(400).send('invalid group password');
+
+            }
+            console.log(req.body);
 
         } catch (error) {
             console.error(error);
@@ -70,12 +96,18 @@ class PostController {
 
     async updatePostInfo(req, res, next) {
         try {
+            if (req.file != undefined) {
+                req.body.image = req.file.path;
+
+            }
+            req.body.isPublic = Boolean(req.body.isPublic);
+
             const id = Number(req.params.postId);
             const query = { id };
 
-            const Post = await BaseController._updateOne(prisma.post, query, req.body);
+            const post = await BaseController._updateOne(prisma.post, query, req.body);
 
-            res.status(200).json(Post);
+            res.status(200).json(post);
 
         } catch (error) {
             console.error(error);
@@ -86,9 +118,9 @@ class PostController {
 
     async deletePostInfo(req, res, next) {
         try {
-            const Post = await this._getOnePost(Number(req.params.postId));
+            const post = await this._getOnePost(Number(req.params.postId));
 
-            if (Post.password == req.body.password) {
+            if (post.password == req.body.password) {
                 const deletePost = await BaseController._deleteOne(prisma.post, Post);
 
                 res.status(200).json(
@@ -116,7 +148,7 @@ class PostController {
         try {
             const { PostId } = req.params;
             
-            const Post = await prisma.post.update({
+            const post = await prisma.post.update({
                 where: {
                     id: Number(PostId)
                 },
@@ -142,9 +174,9 @@ class PostController {
 
     async verifyPostPassword(req, res, next) {
         try {
-            const Post = await this._getOnePost(Number(req.params.postId));
+            const post = await this._getOnePost(Number(req.params.postId));
 
-            if (Post.password == req.body.password) {
+            if (post.password == req.body.password) {
                 res.status(200).json(
                     {
                         "message": "비밀번호가 확인되었습니다"
@@ -168,9 +200,9 @@ class PostController {
 
     async deleteAllPosts(req, res, next) {
         try {
-            const Post = await BaseController._deleteAll(prisma.post);
+            const post = await BaseController._deleteAll(prisma.post);
 
-            res.status(200).json(Post)
+            res.status(200).json(post)
 
         } catch (error) {
             console.log(error);
@@ -181,15 +213,15 @@ class PostController {
 
     async isPostPublic(req, res, next) {
         try {
-            const Post = await this._getOnePost(Number(req.params.postId));
+            const post = await this._getOnePost(Number(req.params.postId));
 
-            if (Post.isPublic) {
+            if (post.isPublic) {
                 res.status(200).send(JSON.parse(`
-                {
-                    "id": ${Post.id},
-                    "isPublic": ${Post.isPublic}
-                }
-            `));
+                    {
+                        "id": ${post.id},
+                        "isPublic": ${post.isPublic}
+                    }
+                `));
 
             }
 
