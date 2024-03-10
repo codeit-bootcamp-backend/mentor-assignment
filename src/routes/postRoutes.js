@@ -1,6 +1,20 @@
 import express from 'express';
 import PostController from '../controllers/postController.js';
+import multer from 'multer';
+
 const postRoutes = express.Router();
+const upload = multer({
+    storage: multer.diskStorage({
+        filename(req, file, done) {
+            done(null, file.originalname);
+        },
+
+        destination(req, file, done) {
+            done(null, 'uploads/');
+        },
+
+    }),
+});
 
 postRoutes
     .route('/groups/:groupId/posts')
@@ -8,7 +22,7 @@ postRoutes
 
 postRoutes
     .route('/groups/:groupId/posts')
-    .post(PostController.createPost);    
+    .post(upload.single('image'), PostController.createPost);    
 
 postRoutes
     .route('/posts/:postId')
@@ -16,7 +30,7 @@ postRoutes
 
 postRoutes
     .route('/posts/:postId')
-    .put(PostController.updatePostInfo)
+    .put(upload.single('image'), PostController.updatePostInfo)
 
 postRoutes
     .route('/posts/:postId')
