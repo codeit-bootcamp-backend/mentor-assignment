@@ -4,9 +4,9 @@ class BaseController {
             const obj =  await target.findMany();
 
             return obj;
-            
+
         } catch (error) {
-            return false;
+            return error;
             
         }
     }
@@ -20,7 +20,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
-            return false;
+            return error;
 
         }
     }
@@ -34,7 +34,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
-            return false;
+            return error;
 
         }
     }
@@ -49,7 +49,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
-            return false;
+            return error;
 
         }
     }
@@ -63,7 +63,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
-            return false;
+            return error;
         }
     }
 
@@ -74,10 +74,11 @@ class BaseController {
             return obj;
 
         } catch (error) {
-            return false;
+            return error;
 
         }
     }
+
 }
 
 export default new BaseController();

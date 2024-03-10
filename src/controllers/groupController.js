@@ -57,6 +57,12 @@ class GroupController {
 
     async createGroup(req, res, next) {
         try {
+            if (req.file != undefined) {
+                req.body.image = req.file.path;
+
+            }
+            req.body.isPublic = Boolean(req.body.isPublic);
+
             const group = await BaseController._createOne(prisma.group, req.body);
             
             res.status(200).send(group);

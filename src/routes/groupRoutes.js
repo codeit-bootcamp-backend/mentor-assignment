@@ -1,6 +1,20 @@
 import express from 'express';
 import GroupController from '../controllers/groupController.js';
+import multer from 'multer';
+
 const groupRoutes = express.Router();
+const upload = multer({
+    storage: multer.diskStorage({
+        filename(req, file, done) {
+            done(null, file.originalname);
+        },
+
+        destination(req, file, done) {
+            done(null, 'uploads/');
+        },
+
+    }),
+});
 
 groupRoutes
     .route('/groups')
@@ -12,11 +26,11 @@ groupRoutes
 
 groupRoutes
     .route('/groups')
-    .post(GroupController.createGroup);
+    .post(upload.single('image'), GroupController.createGroup);
 
 groupRoutes
     .route('/groups/:groupId')
-    .put(GroupController.updateGroupInfo)
+    .put(upload.single('image'), GroupController.updateGroupInfo)
 
 groupRoutes
     .route('/groups/:groupId')
