@@ -182,7 +182,7 @@ class PostController {
             
             res.status(200).json(
                 {
-                    "message": "그룹 공감하기 성공"
+                    "message": "게시글 공감하기 성공"
                 }
             )
 
