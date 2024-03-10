@@ -46,6 +46,6 @@ postRoutes
 
 postRoutes
     .route('/posts/:postId/is-public')
-    .post(PostController.isPostPublic);
+    .get(PostController.isPostPublic);
 
 export default postRoutes;

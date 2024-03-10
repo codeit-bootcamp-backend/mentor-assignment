@@ -167,11 +167,11 @@ class PostController {
 
     async increasePostLikes(req, res, next) {
         try {
-            const { PostId } = req.params;
+            const { postId } = req.params;
             
             const post = await prisma.post.update({
                 where: {
-                    id: Number(PostId)
+                    id: Number(postId)
                 },
 
                 data: {
