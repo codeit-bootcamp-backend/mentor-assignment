@@ -76,12 +76,30 @@ class GroupController {
 
     async updateGroupInfo(req, res, next) {
         try {
-            const id = Number(req.params.groupId);
-            const query = { id };
+            const group = await this._getOneGroup(Number(req.params.groupId));
 
-            const group = await BaseController._updateOne(prisma.group, query, req.body);
+            if (group.password == req.body.password) {
+                if (req.file != undefined) {
+                    req.body.image = req.file.path;
+    
+                }
+                req.body.isPublic = Boolean(req.body.isPublic);
+    
+                const id = Number(req.params.groupId);
+                const query = { id };
+    
+                const updateGroup = await BaseController._updateOne(prisma.group, query, req.body);
+    
+                res.status(200).json(updateGroup);
 
-            res.status(200).json(group);
+            } else {
+                res.status(403).json(
+                    {
+                        "message": "비밀번호가 틀렸습니다"
+                    }
+                )
+                
+            }
 
         } catch (error) {
             console.error(error);
@@ -191,11 +209,11 @@ class GroupController {
 
             if (group.isPublic) {
                 res.status(200).send(JSON.parse(`
-                {
-                    "id": ${group.id},
-                    "isPublic": ${group.isPublic}
-                }
-            `));
+                    {
+                        "id": ${group.id},
+                        "isPublic": ${group.isPublic}
+                    }
+                `));
 
             }
 
