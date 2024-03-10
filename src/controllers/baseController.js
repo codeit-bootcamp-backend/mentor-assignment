@@ -6,6 +6,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
             
         }
@@ -20,6 +21,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
 
         }
@@ -34,6 +36,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
 
         }
@@ -49,6 +52,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
 
         }
@@ -63,6 +67,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
         }
     }
@@ -74,6 +79,7 @@ class BaseController {
             return obj;
 
         } catch (error) {
+            console.log(error);
             return error;
 
         }
