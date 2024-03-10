@@ -30,6 +30,7 @@ model Group {
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   introduction String    @db.VarChar(300)
+  image        String?   @db.VarChar(300)
   Post         Post[]
 }
 
@@ -48,8 +49,8 @@ model Post {
   likes     Int?      @default(0)
   comments  Int?      @default(0)
   isPublic  Boolean   @default(true)
-  tags      String
-  //image
+  tags      Json?
+  image     String?   @db.VarChar(300)
   Comment   Comment[]
 }
 
@@ -64,8 +65,7 @@ model Comment {
   updatedAt DateTime @updatedAt
 }
 
-model badge {
+model Badge {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(30)
-  //image
 }
