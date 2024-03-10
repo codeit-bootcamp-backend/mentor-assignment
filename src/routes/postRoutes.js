@@ -45,7 +45,7 @@ postRoutes
     .post(PostController.verifyPostPassword);
 
 postRoutes
-    .route('/posts/:postId/verify-password')
+    .route('/posts/:postId/is-public')
     .post(PostController.isPostPublic);
 
 export default postRoutes;
