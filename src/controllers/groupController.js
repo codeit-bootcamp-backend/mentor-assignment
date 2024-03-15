@@ -34,7 +34,13 @@ class GroupController {
         try {
             const groups = await BaseController._getSeveral(prisma.group);
 
-            res.status(200).json(groups);
+            const modifiedGroups = groups.map(group => {
+                const { password, ...rest } = group;
+                return rest;
+
+            });
+
+            res.status(200).json(modifiedGroups);
 
         } catch (error) {
             console.error(error);
@@ -47,7 +53,13 @@ class GroupController {
         try {
             const group = await this._getOneGroup(Number(req.params.groupId));
             
-            res.status(200).json(group);
+            const modifiedGroup = group.map(group => {
+                const { password, ...rest } = group;
+                return rest;
+
+            });
+
+            res.status(200).json(modifiedGroup);
 
         } catch (error) {
             console.error(error);
@@ -58,10 +70,6 @@ class GroupController {
 
     async createGroup(req, res, next) {
         try {
-            if (req.file != undefined) {
-                req.body.image = req.file.path;
-
-            }
             req.body.isPublic = Boolean(req.body.isPublic);
 
             const group = await BaseController._createOne(prisma.group, req.body);
@@ -80,10 +88,6 @@ class GroupController {
             const group = await this._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.password) {
-                if (req.file != undefined) {
-                    req.body.image = req.file.path;
-    
-                }
                 req.body.isPublic = Boolean(req.body.isPublic);
     
                 const id = Number(req.params.groupId);

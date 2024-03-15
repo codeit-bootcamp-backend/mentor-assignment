@@ -62,11 +62,6 @@ class PostController {
             const group = await GroupController._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.groupPassword) {
-                if (req.file != undefined) {
-                    req.body.image = req.file.path;
-    
-                }
-
                 req.body.isPublic = Boolean(req.body.isPublic);
                 req.body.groupId = Number(req.params.groupId);
                 req.body.tags = JSON.parse(req.body.tags);
@@ -100,13 +95,6 @@ class PostController {
             const groupId = post.groupId;
 
             if (post.password == req.body.postPassword) {
-                if (req.file != undefined) {
-                    req.body.image = req.file.path;
-    
-                }
-                
-                console.log(req.body)
-
                 req.body.isPublic = Boolean(req.body.isPublic);
                 req.body.groupId = Number(groupId);
                 req.body.tags = JSON.parse(req.body.tags);
