@@ -85,6 +85,28 @@ class BaseController {
         }
     }
 
+    async uploadImage(req, res) {
+        try {
+            if (req.file != undefined) {
+                res.status(200).json({
+                    imageUrl: req.file.path
+                });
+
+            } else {
+                res.status(200).json({
+                    imageUrl: null
+                });
+
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                error: 'An error occurred while uploading image.'
+            });
+            
+        }
+    }
 }
 
 export default new BaseController();
