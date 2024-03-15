@@ -30,7 +30,7 @@ model Group {
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   introduction String    @db.VarChar(300)
-  image        String?   @db.VarChar(300)
+  imageUrl     String?   @db.VarChar(300)
   Post         Post[]
 }
 
@@ -50,7 +50,7 @@ model Post {
   comments  Int?      @default(0)
   isPublic  Boolean   @default(true)
   tags      Json?
-  image     String?   @db.VarChar(300)
+  imageUrl  String?   @db.VarChar(300)
   Comment   Comment[]
 }
 
