@@ -2,13 +2,16 @@ import express from 'express';
 import groupRoutes from './src/routes/groupRoutes.js';
 import postRoutes from './src/routes/postRoutes.js';
 // import commentRoutes from './src/routes/commentRoutes.js';
+import baseRoute from './src/routes/baseRoutes.js';
 
 const app = express();
+const baseRoute = '/api';
 
 app.use(express.json());
 
-app.use('/api', groupRoutes);
-app.use('/api', postRoutes);
-// app.use('/api', commentRoutes);
+app.use(baseRoute, groupRoutes);
+app.use(baseRoute, postRoutes);
+// app.use(baseRoute, commentRoutes);
+app.use(baseRoute, baseRoute);
 
 app.listen(3001);
