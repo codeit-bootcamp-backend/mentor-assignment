@@ -35,7 +35,17 @@ class GroupController {
             const groups = await BaseController._getSeveral(prisma.group);
 
             const modifiedGroups = groups.map(group => {
-                const { password, ...rest } = group;
+                const { password, isPublic, ...rest } = group;
+
+                if (!isPublic) {
+                    return {
+                        ...rest,
+                        introduce: null,
+                        imageUrl: null,
+                        badgeCount: null
+                    };
+
+                }
                 return rest;
 
             });
@@ -52,13 +62,22 @@ class GroupController {
     async getGroupInfo(req, res, next) {
         try {
             const group = await this._getOneGroup(Number(req.params.groupId));
-            
+
             const modifiedGroup = group.map(group => {
-                const { password, ...rest } = group;
+                const { password, isPublic, ...rest } = group;
+
+                if (!isPublic) {
+                    return {
+                        ...rest,
+                        introduce: null,
+                        imageUrl: null,
+                        badgeCount: null
+                    };
+
+                }
                 return rest;
 
             });
-
             res.status(200).json(modifiedGroup);
 
         } catch (error) {
