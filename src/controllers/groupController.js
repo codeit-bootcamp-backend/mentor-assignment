@@ -98,16 +98,23 @@ class GroupController {
     async getGroupInfo(req, res, next) {
         try {
             const group = await this._getOneGroup(Number(req.params.groupId));
+            console.log(group)
+            if (group != null) {
+                const modifiedGroup = {
+                    ...group,
+                    introduce: null,
+                    imageUrl: null,
+                    badgeCount: null
+                };
 
-            const modifiedGroup = {
-                ...group,
-                introduce: null,
-                imageUrl: null,
-                badgeCount: null
-            };
+                res.status(200).json(modifiedGroup);
 
-            res.status(200).json(modifiedGroup);
-
+            } else {
+                res.status(500).json({
+                    message: "Invalid group id"
+                });
+                
+            }
         } catch (error) {
             console.error(error);
             res.status(500).send('An error occurred while retrieving group info.');
