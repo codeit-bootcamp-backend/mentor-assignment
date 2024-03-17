@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import BaseController from './baseController.js';
+import { query } from 'express';
 
 const prisma = new PrismaClient()
 
@@ -32,7 +33,40 @@ class GroupController {
 
     async getAllGroups(req, res, next) {
         try {
-            const groups = await BaseController._getSeveral(prisma.group);
+            const { page, pageSize, sortBy, keyword, isPublic } = req.query;
+            const parsedPage = Number(page) || null;
+            const parsedPageSize = Number(pageSize) || null;
+            const parsedIsPublicQuery = Boolean(isPublic) || null;
+            console.log(req.query);
+            const query = {};
+
+            if (parsedPage !== null) {
+                query.skip = (parsedPage - 1) * parsedPageSize;
+            }
+
+            if (parsedPageSize !== null) {
+                query.take = parsedPageSize;
+            }
+
+            if (sortBy !== undefined) {
+                query.orderBy = {
+                    [sortBy]: 'asc',
+                };
+            }
+
+            if (keyword !== undefined) {
+                query.OR = [
+                    { name: {contains: keyword } },
+                    { introduction: {contains: keyword } }
+                ];
+            }
+
+            if (parsedIsPublicQuery !== null) {
+                query.isPublic = parsedIsPublicQuery;
+            }
+
+            console.log(query);
+            const groups = await BaseController._getSeveral(prisma.group, query);
 
             const modifiedGroups = groups.map(group => {
                 const { password, isPublic, ...rest } = group;
@@ -63,21 +97,13 @@ class GroupController {
         try {
             const group = await this._getOneGroup(Number(req.params.groupId));
 
-            const modifiedGroup = group.map(group => {
-                const { password, isPublic, ...rest } = group;
-
-                if (!isPublic) {
-                    return {
-                        ...rest,
-                        introduce: null,
-                        imageUrl: null,
-                        badgeCount: null
-                    };
-
-                }
-                return rest;
-
-            });
+            const modifiedGroup = {
+                ...group,
+                introduce: null,
+                imageUrl: null,
+                badgeCount: null
+            };
+            
             res.status(200).json(modifiedGroup);
 
         } catch (error) {

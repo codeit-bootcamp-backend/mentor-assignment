@@ -1,7 +1,8 @@
 class BaseController {
-    async _getSeveral(target) {
+    async _getSeveral(target, query=NaN) {
         try {
-            const obj =  await target.findMany();
+
+            const obj = query ? await target.findMany({ where: query }) : await target.findMany();
 
             return obj;
 
@@ -104,7 +105,6 @@ class BaseController {
             res.status(500).json({
                 error: 'An error occurred while uploading image.'
             });
-            
         }
     }
 }
