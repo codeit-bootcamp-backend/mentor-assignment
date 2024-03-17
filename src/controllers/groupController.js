@@ -105,10 +105,7 @@ class GroupController {
             console.log(group)
             if (group != null) {
                 const modifiedGroup = {
-                    ...group,
-                    introduce: null,
-                    imageUrl: null,
-                    badgeCount: null
+                    ...group
                 };
 
                 res.status(200).json(modifiedGroup);
@@ -209,7 +206,7 @@ class GroupController {
                 },
 
                 data: {
-                    likes: { increment: 1 }
+                    likeCount: { increment: 1 }
                 }
 
             });
