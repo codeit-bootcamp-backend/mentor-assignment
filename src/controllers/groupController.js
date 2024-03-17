@@ -270,15 +270,12 @@ class GroupController {
         try {
             const group = await this._getOneGroup(Number(req.params.groupId));
 
-            if (group.isPublic) {
-                res.status(200).send(JSON.parse(`
-                    {
-                        "id": ${group.id},
-                        "isPublic": ${group.isPublic}
-                    }
-                `));
-
-            }
+            res.status(200).send(JSON.parse(`
+                {
+                    "id": ${group.id},
+                    "isPublic": ${group.isPublic}
+                }
+            `));
 
         } catch (error) {
             console.log(error);
