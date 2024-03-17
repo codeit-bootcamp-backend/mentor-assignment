@@ -24,9 +24,9 @@ model Group {
   name         String    @db.VarChar(30)
   password     String    @db.VarChar(30)
   isPublic     Boolean   @default(true)
-  likes        Int?      @default(0)
-  badges       Int?      @default(0)
-  posts        Int?      @default(0)
+  likeCount    Int?      @default(0)
+  badgeCount   Int?      @default(0)
+  postCount    Int?      @default(0)
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   introduction String    @db.VarChar(300)
@@ -46,7 +46,7 @@ model Post {
   updatedAt DateTime  @updatedAt
   location  String    @db.VarChar(100)
   moment    DateTime? @default(now())
-  likes     Int?      @default(0)
+  likeCount Int?      @default(0)
   comments  Int?      @default(0)
   isPublic  Boolean   @default(true)
   tags      Json?
