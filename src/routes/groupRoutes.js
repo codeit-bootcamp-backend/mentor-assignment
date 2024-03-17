@@ -26,11 +26,11 @@ groupRoutes
 
 groupRoutes
     .route('/groups')
-    .post(upload.single('image'), GroupController.createGroup);
+    .post(GroupController.createGroup);
 
 groupRoutes
     .route('/groups/:groupId')
-    .put(upload.single('image'), GroupController.updateGroupInfo)
+    .put(GroupController.updateGroupInfo)
 
 groupRoutes
     .route('/groups/:groupId')
