@@ -33,9 +33,66 @@ class PostController {
 
     async getAllPosts(req, res, next) {
         try {
-            const posts = await BaseController._getSeveral(prisma.post);
+            const { page, pageSize, sortBy, keyword, isPublic } = req.query;
+            const parsedPage = Number(page) || 1;
+            const parsedPageSize = Number(pageSize) || 2;
+            const parsedIsPublicQuery = Boolean(isPublic) || null;
 
-            res.status(200).json(posts);
+            const query = {};
+            const pagination = {};
+
+            pagination.take = parsedPageSize;
+            pagination.skip = (parsedPage - 1) * parsedPageSize;
+
+            if (sortBy !== undefined) {
+                query.orderBy = {
+                    [sortBy]: 'asc',
+                };
+            }
+
+            if (keyword !== undefined) {
+                query.OR = [
+                    { name: {contains: keyword } },
+                    { introduction: {contains: keyword } }
+                ];
+            }
+
+            if (parsedIsPublicQuery !== null) {
+                query.isPublic = parsedIsPublicQuery;
+            }
+
+            const posts = await BaseController._getSeveral(prisma.post, query, pagination);
+            console.log(posts);
+            const modifiedPosts = posts.map(post => {
+                const { groupPassword, postPassword, isPublic, ...rest } = post;
+
+                if (!isPublic) {
+                    return {
+                        ...rest,
+                        nickname: null,
+                        title: null,
+                        location: null,
+                        content: null,
+                        image: null,
+                        tags: null,
+                        likeCount: null,
+                        moment: null
+                    };
+
+                }
+                return rest;
+
+            });
+            
+            const postCount = await BaseController._getCount(prisma.post, query);
+            res.status(200).json(
+                {
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(postCount / parsedPageSize),
+                    totalItemCount: postCount,
+                    data: modifiedPosts
+                }
+            );
 
         } catch (error) {
             console.error(error);
@@ -48,7 +105,19 @@ class PostController {
         try {
             const post = await this._getOnePost(Number(req.params.postId));
             
-            res.status(200).json(post);
+            if (post != null) {
+                const modifiedPost = {
+                    ...post
+                };
+
+                res.status(200).json(modifiedPost);
+
+            } else {
+                res.status(500).json({
+                    "message": "해당하는 게시글이 없습니다"
+                });
+                
+            }
 
         } catch (error) {
             console.error(error);
@@ -62,14 +131,21 @@ class PostController {
             const group = await GroupController._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.groupPassword) {
+                console.log(req.body.isPublic);
                 req.body.isPublic = Boolean(req.body.isPublic);
-                req.body.groupId = Number(req.params.groupId);
+                console.log(req.body.isPublic);
+                req.body.group = {
+                    connect : {
+                        id : Number(req.params.groupId)
+                    }
+                }
                 req.body.tags = JSON.parse(req.body.tags);
                 req.body.moment = new Date(req.body.moment);
                 req.body.password = req.body.postPassword;
 
                 delete req.body.groupPassword;
                 delete req.body.postPassword;
+
 
                 const post = await BaseController._createOne(prisma.post, req.body);
             
@@ -163,7 +239,7 @@ class PostController {
                 },
 
                 data: {
-                    likes: { increment: 1 }
+                    likeCount: { increment: 1 }
                 }
 
             });
@@ -224,15 +300,12 @@ class PostController {
         try {
             const post = await this._getOnePost(Number(req.params.postId));
 
-            if (post.isPublic) {
-                res.status(200).send(JSON.parse(`
-                    {
-                        "id": ${post.id},
-                        "isPublic": ${post.isPublic}
-                    }
-                `));
-
-            }
+            res.status(200).send(JSON.parse(`
+                {
+                    "id": ${post.id},
+                    "isPublic": ${post.isPublic}
+                }
+            `));
 
         } catch (error) {
             console.log(error);
