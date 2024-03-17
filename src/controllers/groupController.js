@@ -74,9 +74,11 @@ class GroupController {
                 if (!isPublic) {
                     return {
                         ...rest,
-                        introduce: null,
+                        introduction: null,
                         imageUrl: null,
-                        badgeCount: null
+                        badgeCount: null,
+                        likeCount: null,
+                        postCount: null
                     };
 
                 }
@@ -103,7 +105,7 @@ class GroupController {
                 imageUrl: null,
                 badgeCount: null
             };
-            
+
             res.status(200).json(modifiedGroup);
 
         } catch (error) {
