@@ -34,19 +34,15 @@ class GroupController {
     async getAllGroups(req, res, next) {
         try {
             const { page, pageSize, sortBy, keyword, isPublic } = req.query;
-            const parsedPage = Number(page) || null;
-            const parsedPageSize = Number(pageSize) || null;
+            const parsedPage = Number(page) || 1;
+            const parsedPageSize = Number(pageSize) || 2;
             const parsedIsPublicQuery = Boolean(isPublic) || null;
             console.log(req.query);
             const query = {};
+            const pagination = {};
 
-            if (parsedPage !== null) {
-                query.skip = (parsedPage - 1) * parsedPageSize;
-            }
-
-            if (parsedPageSize !== null) {
-                query.take = parsedPageSize;
-            }
+            pagination.take = parsedPageSize;
+            pagination.skip = (parsedPage - 1) * parsedPageSize;
 
             if (sortBy !== undefined) {
                 query.orderBy = {
@@ -66,7 +62,7 @@ class GroupController {
             }
 
             console.log(query);
-            const groups = await BaseController._getSeveral(prisma.group, query);
+            const groups = await BaseController._getSeveral(prisma.group, query, pagination);
 
             const modifiedGroups = groups.map(group => {
                 const { password, isPublic, ...rest } = group;
@@ -86,7 +82,15 @@ class GroupController {
 
             });
 
-            res.status(200).json(modifiedGroups);
+            const groupCount = await BaseController._getCount(prisma.group, query);
+            res.status(200).json(
+                {
+                    currentPage: parsedPage,
+                    totalPages: Math.ceil(groupCount / parsedPageSize),
+                    totalItemCount: groupCount,
+                    data: modifiedGroups
+                }
+            );
 
         } catch (error) {
             console.error(error);
@@ -113,7 +117,7 @@ class GroupController {
                 res.status(500).json({
                     message: "Invalid group id"
                 });
-                
+
             }
         } catch (error) {
             console.error(error);

@@ -1,8 +1,20 @@
 class BaseController {
-    async _getSeveral(target, query=NaN) {
+    async _getSeveral(target, query=NaN, page=NaN) {
         try {
+            const obj = query ? await target.findMany(
+                {
+                    skip: page.skip,
+                    take: page.take,
+                    where: query
+                }
 
-            const obj = query ? await target.findMany({ where: query }) : await target.findMany();
+            ) : await target.findMany(
+                {
+                    skip: page.skip,
+                    take: page.take
+                }
+
+            );
 
             return obj;
 
@@ -105,6 +117,21 @@ class BaseController {
             res.status(500).json({
                 error: 'An error occurred while uploading image.'
             });
+        }
+    }
+
+    async _getCount(target, query=NaN) {
+        try {
+            const count = query ? await target.count({
+                where: query
+            }) : await target.count();
+            
+            return count;
+
+        } catch (error) {
+            console.log(error);
+            return error;
+
         }
     }
 }
