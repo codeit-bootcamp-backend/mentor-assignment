@@ -15,7 +15,9 @@ class BaseController {
                 }
 
             );
-
+            obj.forEach(item => {
+                this._formatDate(item);
+            });
             return obj;
 
         } catch (error) {
@@ -30,7 +32,7 @@ class BaseController {
             const obj = await target.findUnique({
                 where: query
             })
-            
+            this._formatDate(obj);
             return obj;
 
         } catch (error) {
@@ -45,7 +47,7 @@ class BaseController {
             const obj = await target.create({
                 data: data
             });
-
+            this._formatDate(obj);
             return obj;
 
         } catch (error) {
@@ -61,7 +63,7 @@ class BaseController {
                 where: query,
                 data: data
             });
-
+            this._formatDate(obj);
             return obj;
 
         } catch (error) {
@@ -76,7 +78,7 @@ class BaseController {
             const obj = await target.delete({
                 where: query
             });
-
+            this._formatDate(obj);
             return obj;
 
         } catch (error) {
@@ -125,13 +127,23 @@ class BaseController {
             const count = query ? await target.count({
                 where: query
             }) : await target.count();
-            
+
             return count;
 
         } catch (error) {
             console.log(error);
             return error;
 
+        }
+    }
+
+    _formatDate(obj) {
+        if (obj && obj.createdAt && obj.updatedAt) {
+            obj.createdAt = obj.createdAt.toISOString().split('T')[0];
+            obj.updatedAt = obj.updatedAt.toISOString().split('T')[0];
+        }
+        if (obj && obj.moment) {
+            obj.moment = obj.moment.toISOString().split('T')[0];
         }
     }
 }

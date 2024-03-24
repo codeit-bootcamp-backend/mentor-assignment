@@ -7,25 +7,9 @@ const prisma = new PrismaClient()
 class CommentController {
 
     constructor() {
-        this._getOneComment = this._getOneComment.bind(this);
+        this._getAllComment = this.getAllComments.bind(this);
         this.deleteComment = this.deleteComment.bind(this);
         this.updateComment = this.updateComment.bind(this);
-    }
-
-    async _getOneComment(id) {
-        try {
-            id = Number(id);
-            const data = { id };
-
-            const comment = await BaseController._getOne(prisma.comment, data);
-
-            return comment;
-
-        } catch (error) {
-            console.log(error);
-            return error;
-
-        }
     }
 
     async getAllComments(req, res, next) {
