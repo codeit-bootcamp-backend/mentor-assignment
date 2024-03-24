@@ -1,6 +1,7 @@
 import express from 'express';
 import multer from 'multer';
 import BaseController from '../controllers/baseController.js';
+import BadgeController from '../controllers/badgeController.js';
 import uuid4 from 'uuid4';
 
 const baseRoutes = express.Router();
@@ -22,5 +23,17 @@ const upload = multer({
 baseRoutes
     .route('/image')
     .post(upload.single('image'), BaseController.uploadImage);
+
+baseRoutes
+    .route('/badges')
+    .post(BadgeController.createBadge);
+
+baseRoutes
+    .route('/badges')
+    .get(BadgeController.getAllBadges);
+
+baseRoutes
+    .route('/groupBadges')
+    .get(BadgeController.getAllGroupBadges);
 
 export default baseRoutes;

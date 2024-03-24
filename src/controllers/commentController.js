@@ -1,6 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 import BaseController from './baseController.js';
-import baseController from './baseController.js';
 
 const prisma = new PrismaClient()
 

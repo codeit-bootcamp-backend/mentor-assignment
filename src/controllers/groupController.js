@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import BaseController from './baseController.js';
+import BadgeController from './badgeController.js';
 import { query } from 'express';
 
 const prisma = new PrismaClient()
@@ -74,7 +75,7 @@ class GroupController {
                 const { password, ...rest } = group;
                 const postCount = await BaseController._getCount(prisma.post, { groupId: group.id });
                 rest.postCount = postCount;
-                
+
                 if (!group.isPublic) {
                     return {
                         ...rest,
@@ -86,6 +87,16 @@ class GroupController {
                     };
 
                 }
+                BadgeController._addBadgeToGroup(rest);
+
+                const groupBadges = await BaseController._getSeveral(prisma.groupBadge, { groupId: rest.id });
+                
+                if (groupBadges.length > 0) {
+                    rest.badges = groupBadges.map(groupBadge => groupBadge.badgeId);
+                } else {
+                    rest.badges = null;
+                }
+                
                 return rest;
 
             }));
@@ -112,9 +123,18 @@ class GroupController {
             const group = await this._getOneGroup(Number(req.params.groupId));
             console.log(group)
             if (group != null) {
+                BadgeController._addBadgeToGroup(group);
                 const modifiedGroup = {
                     ...group
                 };
+
+                const groupBadges = await BaseController._getSeveral(prisma.groupBadge, { groupId: group.id });
+                
+                if (groupBadges.length > 0) {
+                    modifiedGroup.badges = groupBadges.map(groupBadge => groupBadge.badgeId);
+                } else {
+                    modifiedGroup.badges = null;
+                }
 
                 res.status(200).json(modifiedGroup);
 
