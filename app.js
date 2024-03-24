@@ -15,5 +15,6 @@ app.use(baseRoute, groupRoutes);
 app.use(baseRoute, postRoutes);
 app.use(baseRoute, commentRoutes);
 app.use(baseRoute, baseRoutes);
+app.use('/uploads', express.static('uploads'))
 
 app.listen(3001);

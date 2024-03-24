@@ -3,7 +3,7 @@ import multer from 'multer';
 import BaseController from '../controllers/baseController.js';
 import uuid4 from 'uuid4';
 
-const postRoutes = express.Router();
+const baseRoutes = express.Router();
 const upload = multer({
     storage: multer.diskStorage({
         filename(req, file, done) {
@@ -19,8 +19,8 @@ const upload = multer({
     }),
 });
 
-postRoutes
+baseRoutes
     .route('/image')
     .post(upload.single('image'), BaseController.uploadImage);
 
-export default postRoutes;
+export default baseRoutes;
