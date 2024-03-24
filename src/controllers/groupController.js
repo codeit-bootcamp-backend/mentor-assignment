@@ -36,8 +36,15 @@ class GroupController {
             const { page, pageSize, sortBy, keyword, isPublic } = req.query;
             const parsedPage = Number(page) || 1;
             const parsedPageSize = Number(pageSize) || 2;
-            const parsedIsPublicQuery = Boolean(isPublic) || null;
-            console.log(req.query);
+            let parsedIsPublicQuery = isPublic || null;
+
+            if (parsedIsPublicQuery != null) {
+                if (parsedIsPublicQuery == 'true') {
+                    parsedIsPublicQuery = true;
+                } else {
+                    parsedIsPublicQuery = false;
+                }
+            }
             const query = {};
             const pagination = {};
 
@@ -61,13 +68,14 @@ class GroupController {
                 query.isPublic = parsedIsPublicQuery;
             }
 
-            console.log(query);
             const groups = await BaseController._getSeveral(prisma.group, query, pagination);
 
-            const modifiedGroups = groups.map(group => {
-                const { password, isPublic, ...rest } = group;
-
-                if (!isPublic) {
+            const modifiedGroups = await Promise.all(groups.map(async group => {
+                const { password, ...rest } = group;
+                const postCount = await BaseController._getCount(prisma.post, { groupId: group.id });
+                rest.postCount = postCount;
+                
+                if (!group.isPublic) {
                     return {
                         ...rest,
                         introduction: null,
@@ -80,7 +88,7 @@ class GroupController {
                 }
                 return rest;
 
-            });
+            }));
 
             const groupCount = await BaseController._getCount(prisma.group, query);
             res.status(200).json(

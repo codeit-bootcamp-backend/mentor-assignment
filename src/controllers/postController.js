@@ -81,6 +81,7 @@ class PostController {
                 const { groupId, password, content, groupPassword, postPassword, comments, ...rest } = post;
                 const commentCount = await BaseController._getCount(prisma.comment, { postId: post.id });
                 const postIsPublic = post.isPublic;
+                rest.commentCount = commentCount;
 
                 if (!postIsPublic) {
                     return {
