@@ -11,12 +11,12 @@ commentRoutes
     .route('/posts/:postId/comments')
     .post(CommentController.createComment);
 
-// commentRoutes
-//     .route('/comments/:commentId')
-//     .put(CommentController.updateComment);
+commentRoutes
+    .route('/comments/:commentId')
+    .put(CommentController.updateComment);
 
 commentRoutes
     .route('/comments/:commentId')
-    // .delete(CommentController.deleteComment);
+    .delete(CommentController.deleteComment);
 
 export default commentRoutes;
