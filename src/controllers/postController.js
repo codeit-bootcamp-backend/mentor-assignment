@@ -36,7 +36,15 @@ class PostController {
             const { page, pageSize, sortBy, keyword, isPublic } = req.query;
             const parsedPage = Number(page) || 1;
             const parsedPageSize = Number(pageSize) || 2;
-            const parsedIsPublicQuery = Boolean(isPublic) || null;
+            let parsedIsPublicQuery = isPublic || null;
+
+            if (parsedIsPublicQuery != null) {
+                if (parsedIsPublicQuery == 'true') {
+                    parsedIsPublicQuery = true;
+                } else {
+                    parsedIsPublicQuery = false;
+                }
+            }
 
             const query = {};
             const pagination = {};
@@ -52,8 +60,12 @@ class PostController {
 
             if (keyword !== undefined) {
                 query.OR = [
-                    { name: {contains: keyword } },
-                    { introduction: {contains: keyword } }
+                    { title: {contains: keyword } },
+                    { content: {contains: keyword } },
+                    { location: {contains: keyword } },
+                    { tags: {contains: keyword } },
+                    { nickname: {contains: keyword } },
+                    { moment: {contains: keyword } }
                 ];
             }
 
@@ -61,12 +73,16 @@ class PostController {
                 query.isPublic = parsedIsPublicQuery;
             }
 
+            query.groupId = Number(req.params.groupId);
+
             const posts = await BaseController._getSeveral(prisma.post, query, pagination);
             console.log(posts);
-            const modifiedPosts = posts.map(post => {
-                const { groupPassword, postPassword, isPublic, ...rest } = post;
+            const modifiedPosts = await Promise.all(posts.map(async post => {
+                const { groupId, password, content, groupPassword, postPassword, comments, ...rest } = post;
+                const commentCount = await BaseController._getCount(prisma.comment, { postId: post.id });
+                const postIsPublic = post.isPublic;
 
-                if (!isPublic) {
+                if (!postIsPublic) {
                     return {
                         ...rest,
                         nickname: null,
@@ -80,9 +96,9 @@ class PostController {
                     };
 
                 }
-                return rest;
 
-            });
+                return rest;
+            }));
             
             const postCount = await BaseController._getCount(prisma.post, query);
             res.status(200).json(
@@ -104,19 +120,16 @@ class PostController {
     async getPostInfo(req, res, next) {
         try {
             const post = await this._getOnePost(Number(req.params.postId));
+            const commentCount = await BaseController._getCount(prisma.comment, { postId: post.id });
             
             if (post != null) {
-                const modifiedPost = {
-                    ...post
-                };
-
+                const { password, comments, ...modifiedPost } = post;
+                modifiedPost.commentCount = commentCount;
                 res.status(200).json(modifiedPost);
-
             } else {
                 res.status(500).json({
                     "message": "해당하는 게시글이 없습니다"
                 });
-                
             }
 
         } catch (error) {
