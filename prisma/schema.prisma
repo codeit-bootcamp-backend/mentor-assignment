@@ -25,13 +25,13 @@ model Group {
   password     String    @db.VarChar(30)
   isPublic     Boolean   @default(true)
   likeCount    Int?      @default(0)
-  badgeCount   Int?      @default(0)
   postCount    Int?      @default(0)
   createdAt    DateTime? @default(now())
   updatedAt    DateTime? @updatedAt
   introduction String    @db.VarChar(300)
   imageUrl     String?   @db.VarChar(300)
   Post         Post[]
+  Badge       Badge[]
 }
 
 model Post {
@@ -68,4 +68,7 @@ model Comment {
 model Badge {
   id   Int    @id @default(autoincrement())
   name String @db.VarChar(30)
+  imageUrl String? @db.VarChar(300)
+  description String? @db.VarChar(300)
+  Group Group[]
 }
