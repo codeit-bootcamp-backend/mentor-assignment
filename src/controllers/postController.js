@@ -86,13 +86,10 @@ class PostController {
                 if (!postIsPublic) {
                     return {
                         ...rest,
-                        nickname: null,
-                        title: null,
                         location: null,
                         content: null,
                         image: null,
                         tags: null,
-                        likeCount: null,
                         moment: null
                     };
 
