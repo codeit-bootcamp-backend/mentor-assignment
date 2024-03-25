@@ -60,12 +60,10 @@ class PostController {
 
             if (keyword !== undefined) {
                 query.OR = [
-                    { title: {contains: keyword } },
-                    { content: {contains: keyword } },
-                    { location: {contains: keyword } },
-                    { tags: {contains: keyword } },
-                    { nickname: {contains: keyword } },
-                    { moment: {contains: keyword } }
+                    { title: { contains: keyword } },
+                    { content: { contains: keyword } },
+                    { location: { contains: keyword } },
+                    { nickname: { contains: keyword } }
                 ];
             }
 
