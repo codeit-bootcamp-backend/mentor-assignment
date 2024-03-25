@@ -80,10 +80,7 @@ class GroupController {
                     return {
                         ...rest,
                         introduction: null,
-                        imageUrl: null,
-                        badgeCount: null,
-                        likeCount: null,
-                        postCount: null
+                        imageUrl: null
                     };
 
                 }
