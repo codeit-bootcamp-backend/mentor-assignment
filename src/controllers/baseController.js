@@ -101,10 +101,11 @@ class BaseController {
     }
 
     async uploadImage(req, res) {
+        const baseUrl = `${req.protocol}://${req.get('host')}/`;
         try {
             if (req.file != undefined) {
                 res.status(200).json({
-                    imageUrl: req.file.path
+                    imageUrl: baseUrl + req.file.path
                 });
 
             } else {
