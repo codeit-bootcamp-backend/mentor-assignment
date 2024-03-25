@@ -214,8 +214,8 @@ class PostController {
             const post = await this._getOnePost(Number(req.params.postId));
 
             if (post.password == req.body.postPassword) {
-                delete post.tags;
-                const deletePost = await BaseController._deleteOne(prisma.post, post);
+                const query = { id: Number(req.params.postId) };
+                const deletePost = await BaseController._deleteOne(prisma.post, query);
 
                 res.status(200).json(
                     {
