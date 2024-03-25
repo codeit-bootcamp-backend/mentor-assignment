@@ -30,7 +30,7 @@ class CommentController {
             
             query.postId = Number(req.params.postId);
             console.log(query);
-            const comments = await baseController._getSeveral(prisma.comment, query, pagination);
+            const comments = await BaseController._getSeveral(prisma.comment, query, pagination);
             const modifiedComments = comments.map((comment) => {
                 const { password, postId, ...rest } = comment;
                 return rest;
