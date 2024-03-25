@@ -198,7 +198,8 @@ class GroupController {
             const group = await this._getOneGroup(Number(req.params.groupId));
 
             if (group.password == req.body.password) {
-                const deleteGroup = await BaseController._deleteOne(prisma.group, group);
+                const query = { id: Number(req.params.groupId) };
+                const deleteGroup = await BaseController._deleteOne(prisma.group, query);
 
                 res.status(200).json(
                     {
