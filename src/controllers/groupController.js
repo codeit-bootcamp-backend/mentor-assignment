@@ -94,9 +94,9 @@ class GroupController {
                 if (groupBadges.length > 0) {
                     rest.badges = groupBadges.map(groupBadge => groupBadge.badgeId);
                 } else {
-                    rest.badges = null;
+                    rest.badges = [];
                 }
-                
+
                 return rest;
 
             }));
