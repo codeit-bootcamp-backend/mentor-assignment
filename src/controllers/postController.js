@@ -36,6 +36,7 @@ class PostController {
             const { page, pageSize, sortBy, keyword, isPublic } = req.query;
             const parsedPage = Number(page) || 1;
             const parsedPageSize = Number(pageSize) || 2;
+            const parsedSort = sortBy || null;
             let parsedIsPublicQuery = isPublic || null;
 
             if (parsedIsPublicQuery != null) {
@@ -90,11 +91,19 @@ class PostController {
                 return rest;
             }));
             
-            if (sortBy === 'latest') {
-                modifiedPosts.sort((a, b) => b.createdAt - a.createdAt);
-            } else if (sortBy === 'mostCommented') {
+            if (parsedSort === 'latest') {
+                modifiedPosts.sort((a, b) => {
+                    // Sort by latest
+                    if (a.createdAt > b.createdAt) {
+                        return -1;
+                    } else if (a.createdAt < b.createdAt) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            } else if (parsedSort === 'mostCommented') {
                 modifiedPosts.sort((a, b) => b.commentCount - a.commentCount);
-            } else if (sortBy === 'mostLiked') {
+            } else if (parsedSort === 'mostLiked') {
                 modifiedPosts.sort((a, b) => b.likeCount - a.likeCount);
             }
 
