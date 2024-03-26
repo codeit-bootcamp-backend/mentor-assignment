@@ -130,7 +130,7 @@ class GroupController {
                 if (groupBadges.length > 0) {
                     modifiedGroup.badges = groupBadges.map(groupBadge => groupBadge.badgeId);
                 } else {
-                    modifiedGroup.badges = null;
+                    modifiedGroup.badges = [];
                 }
 
                 res.status(200).json(modifiedGroup);
