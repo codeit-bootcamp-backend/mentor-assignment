@@ -52,12 +52,6 @@ class PostController {
             pagination.take = parsedPageSize;
             pagination.skip = (parsedPage - 1) * parsedPageSize;
 
-            if (sortBy !== undefined) {
-                query.orderBy = {
-                    [sortBy]: 'asc',
-                };
-            }
-
             if (keyword !== undefined) {
                 query.OR = [
                     { title: { contains: keyword } },
@@ -96,6 +90,14 @@ class PostController {
                 return rest;
             }));
             
+            if (sortBy === 'latest') {
+                modifiedPosts.sort((a, b) => b.createdAt - a.createdAt);
+            } else if (sortBy === 'mostCommented') {
+                modifiedPosts.sort((a, b) => b.commentCount - a.commentCount);
+            } else if (sortBy === 'mostLiked') {
+                modifiedPosts.sort((a, b) => b.likeCount - a.likeCount);
+            }
+
             const postCount = await BaseController._getCount(prisma.post, query);
             res.status(200).json(
                 {
