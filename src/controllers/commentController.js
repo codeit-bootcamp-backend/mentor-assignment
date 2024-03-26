@@ -105,7 +105,6 @@ class CommentController {
                     delete updatedComment.password;
                     delete updatedComment.postId;
                     delete updatedComment.updatedAt;
-                    delete updatedComment.createdAt;
     
                     res.status(200).json(updatedComment);       
                 } else {
