@@ -37,6 +37,7 @@ class GroupController {
             const { page, pageSize, sortBy, keyword, isPublic } = req.query;
             const parsedPage = Number(page) || 1;
             const parsedPageSize = Number(pageSize) || 2;
+            const parsedSort = sortBy || null;
             let parsedIsPublicQuery = isPublic || null;
 
             if (parsedIsPublicQuery != null) {
@@ -51,12 +52,6 @@ class GroupController {
 
             pagination.take = parsedPageSize;
             pagination.skip = (parsedPage - 1) * parsedPageSize;
-
-            if (sortBy !== undefined) {
-                query.orderBy = {
-                    [sortBy]: 'asc',
-                };
-            }
 
             if (keyword !== undefined) {
                 query.OR = [
@@ -97,6 +92,24 @@ class GroupController {
                 return rest;
 
             }));
+
+            if (parsedSort == 'latest') {
+                modifiedGroups.sort((a, b) => {
+                    // Sort by latest
+                    if (a.createdAt > b.createdAt) {
+                        return -1;
+                    } else if (a.createdAt < b.createdAt) {
+                        return 1;
+                    }
+                    return 0;
+                });
+            } else if (parsedSort == 'mostPosted') {
+                modifiedGroups.sort((a, b) => b.postCount - a.postCount);
+            } else if (parsedSort == 'mostLiked') {
+                modifiedGroups.sort((a, b) => b.likeCount - a.likeCount);
+            } else if (parsedSort == 'mostBadge') {
+                modifiedGroups.sort((a, b) => b.badges.length - a.badges.length);
+            }
 
             const groupCount = await BaseController._getCount(prisma.group, query);
             res.status(200).json(
