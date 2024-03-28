@@ -159,7 +159,7 @@ class PostController {
                         id : Number(req.params.groupId)
                     }
                 }
-                req.body.tags = JSON.parse(req.body.tags);
+                req.body.tags = req.body.tags;
                 req.body.moment = new Date(req.body.moment);
                 req.body.password = req.body.postPassword;
 
@@ -193,7 +193,7 @@ class PostController {
             if (post.password == req.body.postPassword) {
                 req.body.isPublic = Boolean(req.body.isPublic);
                 req.body.groupId = Number(groupId);
-                req.body.tags = JSON.parse(req.body.tags);
+                req.body.tags = req.body.tags;
                 req.body.moment = new Date(req.body.moment);
                 req.body.password = req.body.postPassword;
 
