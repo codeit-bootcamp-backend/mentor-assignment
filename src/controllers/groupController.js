@@ -138,6 +138,9 @@ class GroupController {
                     ...group
                 };
 
+                const postCount = await BaseController._getCount(prisma.post, { groupId: group.id });
+                modifiedGroup.postCount = postCount;
+
                 const groupBadges = await BaseController._getSeveral(prisma.groupBadge, { groupId: group.id });
                 
                 if (groupBadges.length > 0) {
@@ -145,7 +148,7 @@ class GroupController {
                 } else {
                     modifiedGroup.badges = [];
                 }
-
+                
                 res.status(200).json(modifiedGroup);
 
             } else {
